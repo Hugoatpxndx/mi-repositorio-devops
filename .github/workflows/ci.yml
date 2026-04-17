@@ -33,7 +33,12 @@ jobs:
       # Fase 4: Validación de funcionamiento
       - name: ✅ Verificar que la aplicación está en línea
         run: |
-          # Pausa de 3 segundos para dejar que Flask inicie correctamente
-          sleep 3 
+          echo "Dando 10 segundos para que Flask inicie por completo..."
+          sleep 10 
+          
+          echo "=== LOGS DEL CONTENEDOR (PARA DEPURAR) ==="
+          docker logs app-corriendo
+          echo "=========================================="
+          
           echo "Haciendo petición al servidor local..."
           curl http://localhost:5000
