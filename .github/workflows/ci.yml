@@ -1,0 +1,39 @@
+name: CI/CD Pipeline DevOps
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      # Fase 1: Origen / Source (Equivalente a AWS CodeCommit)
+      - name: 📥 Clonar el repositorio
+        uses: actions/checkout@v3
+
+      # Fase 2: Construcción / Build (Equivalente a AWS CodeBuild)
+      - name: 🐳 Construir imagen de Docker
+        run: |
+          echo "Construyendo la imagen de la aplicación Flask..."
+          docker build -t mi-app-flask .
+          
+      # Fase 3: Despliegue / Deploy (Equivalente a AWS CodeDeploy)
+      - name: 🚀 Ejecutar contenedor (Despliegue)
+        run: |
+          echo "Levantando el contenedor en el puerto 5000..."
+          docker run -d -p 5000:5000 --name app-corriendo mi-app-flask
+          
+          # Muestra los contenedores activos para que puedas tomar captura del log
+          docker ps
+
+      # Fase 4: Validación de funcionamiento
+      - name: ✅ Verificar que la aplicación está en línea
+        run: |
+          # Pausa de 3 segundos para dejar que Flask inicie correctamente
+          sleep 3 
+          echo "Haciendo petición al servidor local..."
+          curl http://localhost:5000
